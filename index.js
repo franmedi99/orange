@@ -3,7 +3,6 @@ const app = express();
 const path = require('path');
 const cors = require("cors");
 app.use(express.json());
-
 //configuraciones
 app.set('port', process.env.PORT || 4000);
 // const corsOptions = {
@@ -14,6 +13,7 @@ app.set('port', process.env.PORT || 4000);
 
 //middlewares
 //app.use(cors(corsOptions))
+app.use(express.static(path.join(__dirname, 'build')));
 
  app.get('*', function (req, res) {
      res.sendFile(path.join(__dirname, 'build', 'index.html'));
