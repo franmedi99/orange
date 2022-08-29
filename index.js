@@ -5,14 +5,7 @@ const cors = require("cors");
 app.use(express.json());
 //configuraciones
 app.set('port', process.env.PORT || 4000);
-// const corsOptions = {
-//     origin: 'http://localhost:3000',
-//     credentials: true,            //access-control-allow-credentials:true
-//     optionSuccessStatus: 200,
-// }
 
-//middlewares
-//app.use(cors(corsOptions))
 app.use(express.static(path.join(__dirname, 'build')));
 
  app.get('*', function (req, res) {
@@ -39,41 +32,45 @@ io.use(async (socket, next) => {
 let rooms = [];
 
 io.on('connection', (socket) => {
-    // console.log("nuevo socket: " + socket.id)
-
     socket.on('join', ({ username, room }) => {
+        socket.user = username;
+        socket.room = room;
+        socket.spectate = false;
         socket.join(room);
+        //la siguiente linea setea el usuario y la sala en el socket
         if (rooms.length == 0) {
-            rooms.push({ room: room, users: [{ name: username, role: "admin", voted: false, spectate: false }] });
-            io.to(room).emit('joined', ([{ room: room, users: [{ name: username, role: "admin", voted: false, spectate: false }] }]));
+            rooms.push({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] });
+            io.to(room).emit('joined', ({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] }));
         } else {
-            for (let roomOfArray of rooms) {
+            let count = 0;
+            for (var roomOfArray of rooms) {
                 if (roomOfArray.room == room) {
-                    count = 0;
-                    for (let user of roomOfArray.users) {
-                        if (user.name == username) {
-
-                            count++;
-                            break;
-
-                        }
-                    }
-                    if (count == 0) {
-                        roomOfArray.users.push({ name: username, role: "user", voted: false, spectate: false });
-                        io.to(room).emit('joined', ([{ room: room, users: roomOfArray.users }]));
-
-                    } else {
-                        io.to(room).emit('joined', ([{ room: room, users: roomOfArray.users }]));
-
-                    }
+                    count++;
                     break;
-                } else {
-                    rooms.push({ room: room, users: [{ name: username, role: "admin", voted: false, spectate: false }] });
-                    io.to(room).emit('joined', ({ room: room, users: [{ name: username, role: "admin", voted: false, spectate: false }] }));
                 }
             };
-        }
+            if (count > 0) {
+                let count2 = 0;
 
+                for (let user of roomOfArray.users) {
+                    if (user.name == username) {
+                        count2++;
+                        break;
+                    }
+                }
+                if (count2 == 0) {
+                    roomOfArray.users.push({ name: username, role: "user", voted: false });
+                    io.to(room).emit('joined', ({ room: room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
+                } else {
+                    io.to(room).emit('joined', ({ room: room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
+                }
+            } else {
+                rooms.push({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] });
+                io.to(room).emit('joined', ({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] }));
+            }
+
+        }
+        
     });
 
     socket.on('select', ({ number, name, room }) => {
@@ -83,10 +80,11 @@ io.on('connection', (socket) => {
                     if (user.name === name) {
                         user.voted = true;
                         user.number = number;
-                        io.to(room).emit('selected', ({ room: room, users: roomOfArray.users }));
+                        io.to(room).emit('selected', ({ room: room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
                         break;
                     }
                 }
+                break;
             }
         }
     }
@@ -96,6 +94,7 @@ io.on('connection', (socket) => {
         for (let roomOfArray of rooms) {
             if (roomOfArray.room === room) {
                 io.to(room).emit('revealed', ({ room: room, users: roomOfArray.users }));
+                break;
             }
         }
     });
@@ -109,23 +108,77 @@ io.on('connection', (socket) => {
                     delete user.number;
                 }
                 io.to(room).emit('resetVote', ({ room: room, users: roomOfArray.users }));
+                break;
             }
         }
     });
-    /*
-     socket.on('disconnect', ({username}) => {
-        console.log("desconectado")
-       for (let roomOfArray of rooms) {
-         for (let user of roomOfArray.users) {
-           if (user.name === username) {
-                roomOfArray.users.splice(roomOfArray.users.indexOf(user), 1);
-             io.to(room).emit('disconnected', ({room: room, users: roomOfArray.users}));
-             break;
-           }
-    
-         }
-    
-       }
-     })
-    */
+
+    socket.on('spectate', async ({ room, name, spectate }) => {
+        for (let roomOfArray of rooms) {
+            if (roomOfArray.room === room) {
+                if (spectate === true) {
+                    socket.spectate = true;
+                    for (let user of roomOfArray.users) {
+                        if (user.name === name) {
+
+                            roomOfArray.users.splice(roomOfArray.users.indexOf(user), 1);
+                            roomOfArray.viewers.push({ name: name });
+                            io.to(room).emit('newViewer', ({ room: room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
+                            break;
+
+                        }
+                    }
+                } else {
+                    socket.spectate = false;
+                    for (let user of roomOfArray.viewers) {
+                        if (user.name === name) {
+                            roomOfArray.viewers.splice(roomOfArray.viewers.indexOf(user), 1);
+                            roomOfArray.users.push({ name: name });
+                            io.to(room).emit('newViewer', ({ room: room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    });
+
+    socket.on('disconnect', () => {
+
+        for (let roomOfArray of rooms) {
+           
+            if (roomOfArray.room == socket.room) {
+             
+                if (socket.spectate == false) {
+                    for (let user of roomOfArray.users) {
+                        if (user.name == socket.user) {
+                           
+                            roomOfArray.users.splice(roomOfArray.users.indexOf(user), 1);
+                            io.sockets.in(socket.room).emit('disconnected', ({ room: socket.room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
+                            break;
+                        }
+                    }
+                } else {
+                    for (let user of roomOfArray.viewers) {
+                        if (user.name == socket.user) {
+                            roomOfArray.viewers.splice(roomOfArray.viewers.indexOf(user), 1);
+                            io.sockets.in(socket.room).emit('disconnected', ({ room: socket.room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
+                            break;
+                        }
+                    }
+                }
+
+                if(roomOfArray.users.length == 0 && roomOfArray.viewers.length == 0){
+                    rooms.splice(rooms.indexOf(roomOfArray), 1);
+                }
+
+                break;
+            }
+        }
+        socket.leave(socket.room);
+        socket.disconnect();
+
+    });
+
 });
