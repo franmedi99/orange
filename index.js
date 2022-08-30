@@ -7,11 +7,11 @@ app.use(express.json());
 app.set('port', process.env.PORT || 4000);
 
 app.use(express.static(path.join(__dirname, 'build')));
-
+/*
  app.get('*', function (req, res) {
      res.sendFile(path.join(__dirname, 'build', 'index.html'));
  });
-
+*/
 //starting
 const server = app.listen(app.get('port'), () => {
     console.log('server abierto en el puerto:', app.get('port'))
@@ -114,9 +114,10 @@ io.on('connection', (socket) => {
     });
 
     socket.on('spectate', async ({ room, name, spectate }) => {
+      
         for (let roomOfArray of rooms) {
             if (roomOfArray.room === room) {
-                if (spectate === true) {
+                if (spectate === false) {
                     socket.spectate = true;
                     for (let user of roomOfArray.users) {
                         if (user.name === name) {
