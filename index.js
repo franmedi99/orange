@@ -51,7 +51,6 @@ io.on('connection', (socket) => {
             };
             if (count > 0) {
                 let count2 = 0;
-
                 for (let user of roomOfArray.users) {
                     if (user.name == username) {
                         count2++;
@@ -65,10 +64,9 @@ io.on('connection', (socket) => {
                     io.to(room).emit('joined', ({ room: room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
                 }
             } else {
-                rooms.push({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] });
+                rooms.push({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers:[] });
                 io.to(room).emit('joined', ({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] }));
             }
-
         }
         
     });
