@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.555af757.css",
-    "main.js": "/static/js/main.9249cc5b.js",
+    "main.js": "/static/js/main.b4a66906.js",
     "static/media/fontawesome-webfont.svg?v=4.7.0": "/static/media/fontawesome-webfont.6878d55e3615ccf40c38.svg",
     "static/media/banco2.png": "/static/media/banco2.5f6e8a2775f03d73e531.png",
     "static/media/fontawesome-webfont.eot": "/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
@@ -13,10 +13,10 @@
     "static/media/logo2.png": "/static/media/logo2.5b1079c022ad76908363.png",
     "index.html": "/index.html",
     "main.555af757.css.map": "/static/css/main.555af757.css.map",
-    "main.9249cc5b.js.map": "/static/js/main.9249cc5b.js.map"
+    "main.b4a66906.js.map": "/static/js/main.b4a66906.js.map"
   },
   "entrypoints": [
     "static/css/main.555af757.css",
-    "static/js/main.9249cc5b.js"
+    "static/js/main.b4a66906.js"
   ]
 }

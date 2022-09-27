@@ -8,6 +8,7 @@ app.set('port', process.env.PORT || 4000);
 
 app.use(express.static(path.join(__dirname, 'build')));
 
+
  app.get('*', function (req, res) {
      res.sendFile(path.join(__dirname, 'build', 'index.html'));
  });
@@ -34,22 +35,21 @@ io.use(async (socket, next) => {
 let rooms = [];
 
 io.on('connection', (socket) => {
-    socket.on('join', ({ username, room, role }) => {
+    socket.on('join', async ({ username, room, viewer }) => {
+
         socket.user = username;
         socket.room = room;
-        if (role === 'user') {
-            socket.spectate = false;
-        } else {
-            socket.spectate = true;
-        }
-        socket.join(room);
+        socket.spectate = viewer;
+        console.log(viewer)
+        console.log(socket.user)
+        await socket.join(room);
         //la siguiente linea setea el usuario y la sala en el socket
         if (rooms.length == 0) {
-            if (role === 'user') {
+            if (viewer == false) {
                 rooms.push({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] });
                 io.to(room).emit('joined', ({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] }));
             } else {
-                rooms.push({ room: room, users: [], viewers: [{ username: username, role: "admin" }] });
+                rooms.push({ room: room, users: [], viewers: [{ name: username, role: "admin" }] });
                 io.to(room).emit('joined', ({ room: room, users: [], viewers: [{ name: username, role: "admin" }] }));
             }
         } else {
@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
                     }
                 }
                 if (count2 == 0) {
-                    if (role === 'user') {
+                    if (viewer == false) {
                         roomOfArray.users.push({ name: username, role: "user", voted: false });
                     } else {
                         roomOfArray.viewers.push({ name: username, role: "user" });
@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
                     io.to(room).emit('joined', ({ room: room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
                 }
             } else {
-                if (role === 'user') {
+                if (viewer == false) {
                     rooms.push({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] });
                     io.to(room).emit('joined', ({ room: room, users: [{ name: username, role: "admin", voted: false }], viewers: [] }));
                 } else {
@@ -142,7 +142,7 @@ io.on('connection', (socket) => {
 
         for (let roomOfArray of rooms) {
             if (roomOfArray.room === room) {
-                if (spectate === false) {
+                if (spectate == false) {
                     socket.spectate = true;
                     for (let user of roomOfArray.users) {
                         if (user.name === name) {
@@ -179,19 +179,20 @@ io.on('connection', (socket) => {
                 if (socket.spectate == false) {
                     for (let user of roomOfArray.users) {
                         if (user.name == socket.user) {
-
                             roomOfArray.users.splice(roomOfArray.users.indexOf(user), 1);
                             io.sockets.in(socket.room).emit('disconnected', ({ room: socket.room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
                             break;
                         }
                     }
                 } else {
+
                     for (let user of roomOfArray.viewers) {
                         if (user.name == socket.user) {
                             roomOfArray.viewers.splice(roomOfArray.viewers.indexOf(user), 1);
                             io.sockets.in(socket.room).emit('disconnected', ({ room: socket.room, users: roomOfArray.users, viewers: roomOfArray.viewers }));
                             break;
                         }
+
                     }
                 }
 
