@@ -1,22 +1,21 @@
 {
   "files": {
     "main.css": "/static/css/main.555af757.css",
-    "main.js": "/static/js/main.b4a66906.js",
+    "main.js": "/static/js/main.3d7cb065.js",
     "static/media/fontawesome-webfont.svg?v=4.7.0": "/static/media/fontawesome-webfont.6878d55e3615ccf40c38.svg",
-    "static/media/banco2.png": "/static/media/banco2.5f6e8a2775f03d73e531.png",
     "static/media/fontawesome-webfont.eot": "/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
     "static/media/fontawesome-webfont.ttf?v=4.7.0": "/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
     "static/media/bootstrap-icons.woff": "/static/media/bootstrap-icons.e559bf06bc84fd9525e6.woff",
     "static/media/bootstrap-icons.woff2": "/static/media/bootstrap-icons.ea98e12d2d58747f9fc5.woff2",
     "static/media/fontawesome-webfont.woff?v=4.7.0": "/static/media/fontawesome-webfont.f691f37e57f04c152e23.woff",
     "static/media/fontawesome-webfont.woff2?v=4.7.0": "/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
-    "static/media/logo2.png": "/static/media/logo2.5b1079c022ad76908363.png",
+    "static/media/logo4.png": "/static/media/logo4.13bfd06fbc07d4beaf6c.png",
     "index.html": "/index.html",
     "main.555af757.css.map": "/static/css/main.555af757.css.map",
-    "main.b4a66906.js.map": "/static/js/main.b4a66906.js.map"
+    "main.3d7cb065.js.map": "/static/js/main.3d7cb065.js.map"
   },
   "entrypoints": [
     "static/css/main.555af757.css",
-    "static/js/main.b4a66906.js"
+    "static/js/main.3d7cb065.js"
   ]
 }

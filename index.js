@@ -40,8 +40,6 @@ io.on('connection', (socket) => {
         socket.user = username;
         socket.room = room;
         socket.spectate = viewer;
-        console.log(viewer)
-        console.log(socket.user)
         await socket.join(room);
         //la siguiente linea setea el usuario y la sala en el socket
         if (rooms.length == 0) {
