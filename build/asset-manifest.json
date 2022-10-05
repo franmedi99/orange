@@ -1,21 +1,17 @@
 {
-  "files": {
-    "main.css": "/static/css/main.555af757.css",
-    "main.js": "/static/js/main.3d7cb065.js",
-    "static/media/fontawesome-webfont.svg?v=4.7.0": "/static/media/fontawesome-webfont.6878d55e3615ccf40c38.svg",
-    "static/media/fontawesome-webfont.eot": "/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
-    "static/media/fontawesome-webfont.ttf?v=4.7.0": "/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
-    "static/media/bootstrap-icons.woff": "/static/media/bootstrap-icons.e559bf06bc84fd9525e6.woff",
-    "static/media/bootstrap-icons.woff2": "/static/media/bootstrap-icons.ea98e12d2d58747f9fc5.woff2",
-    "static/media/fontawesome-webfont.woff?v=4.7.0": "/static/media/fontawesome-webfont.f691f37e57f04c152e23.woff",
-    "static/media/fontawesome-webfont.woff2?v=4.7.0": "/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
-    "static/media/logo4.png": "/static/media/logo4.13bfd06fbc07d4beaf6c.png",
-    "index.html": "/index.html",
-    "main.555af757.css.map": "/static/css/main.555af757.css.map",
-    "main.3d7cb065.js.map": "/static/js/main.3d7cb065.js.map"
-  },
-  "entrypoints": [
-    "static/css/main.555af757.css",
-    "static/js/main.3d7cb065.js"
-  ]
+  "main.css": "/static/css/main.fccc10fd.chunk.css",
+  "main.js": "/static/js/main.88e6e130.chunk.js",
+  "main.js.map": "/static/js/main.88e6e130.chunk.js.map",
+  "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+  "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+  "static/js/2.b638323f.chunk.js": "/static/js/2.b638323f.chunk.js",
+  "static/js/2.b638323f.chunk.js.map": "/static/js/2.b638323f.chunk.js.map",
+  "index.html": "/index.html",
+  "precache-manifest.80e56b60481bee65aac5371a4421166b.js": "/precache-manifest.80e56b60481bee65aac5371a4421166b.js",
+  "service-worker.js": "/service-worker.js",
+  "static/css/main.fccc10fd.chunk.css.map": "/static/css/main.fccc10fd.chunk.css.map",
+  "static/media/banco.png": "/static/media/banco.ed3ce770.png",
+  "static/media/bootstrap-icons.css": "/static/media/bootstrap-icons.be6df3f0.woff",
+  "static/media/font-awesome.min.css": "/static/media/fontawesome-webfont.fee66e71.woff",
+  "static/media/logo2.png": "/static/media/logo2.31d6c2ec.png"
 }
